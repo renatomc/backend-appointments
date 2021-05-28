@@ -5,12 +5,9 @@ import authConfig from '../config/auth';
 
 import User from '../models/User';
 
-const { jwt: {
-    secret,
-    expiresIn,
-  }
+const {
+  jwt: { secret, expiresIn },
 } = authConfig;
-
 
 interface Request {
   email: string;
@@ -27,28 +24,30 @@ class AuthenticateUserService {
     const usersRepository = getRepository(User);
 
     const user = await usersRepository.findOne({
-      where: { email }
+      where: { email },
     });
 
-    if(!user) {
+    if (!user) {
       throw new Error('Incorrect email/password combination.');
     }
 
     const passwordMatched = await compare(password, user.password);
 
-    if(!passwordMatched) {
+    if (!passwordMatched) {
       throw new Error('Incorrect email/password combination.');
     }
 
-    const token = sign({ }, secret, {
+    const token = sign({}, secret, {
       subject: user.id,
       expiresIn,
     });
 
+    const teste = '';
+
     return {
       user,
       token,
-    }
+    };
   }
 }
 

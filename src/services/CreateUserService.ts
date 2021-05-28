@@ -17,7 +17,7 @@ class CreateUserService {
       where: { email },
     });
 
-    if(checkUserExistes) {
+    if (checkUserExistes) {
       throw new Error('Emaili address already used.');
     }
 
