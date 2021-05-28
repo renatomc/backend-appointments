@@ -14,16 +14,16 @@ class CreateAppointmentService {
     const appointmentDate = startOfHour(date);
 
     const findAppointmentInSameDate = await appointmentsRepository.findByDate(
-      appointmentDate
+      appointmentDate,
     );
 
-    if(findAppointmentInSameDate) {
+    if (findAppointmentInSameDate) {
       throw Error('This appointment is already booked');
     }
 
     const appointment = appointmentsRepository.create({
       provider_id,
-      date: appointmentDate
+      date: appointmentDate,
     });
 
     await appointmentsRepository.save(appointment);

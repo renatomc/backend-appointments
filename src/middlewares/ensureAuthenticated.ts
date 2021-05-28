@@ -8,20 +8,18 @@ interface TokenPayload {
   sub: string;
 }
 
-const { jwt: {
-    secret,
-  }
+const {
+  jwt: { secret },
 } = authConfig;
 
 export default function ensureAuthenticated(
   request: Request,
   response: Response,
-  next: NextFunction
+  next: NextFunction,
 ): void {
-
   const authHeader = request.headers.authorization;
 
-  if(!authHeader) {
+  if (!authHeader) {
     throw new Error('JWT token is missing');
   }
 
@@ -34,7 +32,7 @@ export default function ensureAuthenticated(
 
     request.user = {
       id: sub,
-    }
+    };
 
     return next();
   } catch {
