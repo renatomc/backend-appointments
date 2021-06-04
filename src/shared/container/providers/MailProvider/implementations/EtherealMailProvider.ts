@@ -1,10 +1,19 @@
 import nodemailer, { Transporter } from 'nodemailer';
-import IMailProvider from '@shared/container/providers/MailProvider/models/IMailProvider';
+import { inject, injectable } from 'tsyringe';
 
+import IMailProvider from '@shared/container/providers/MailProvider/models/IMailProvider';
+import ISendMailDTOS from '@shared/container/providers/MailProvider/dtos/ISendMailDTOS';
+
+import IMailTemplateProvider from '@shared/container/providers/MailTemplateProvider/models/IMailTemplateProvider';
+
+@injectable()
 class EtherealMailProvider implements IMailProvider {
   private client: Transporter;
 
-  constructor() {
+  constructor(
+    @inject('MailTemplateProvider')
+    private mailTemplateProvider: IMailTemplateProvider,
+  ) {
     nodemailer.createTestAccount().then(account => {
       this.client = nodemailer.createTransport({
         host: account.smtp.host,
@@ -18,12 +27,23 @@ class EtherealMailProvider implements IMailProvider {
     });
   }
 
-  public async sendMail(to: string, body: string): Promise<void> {
+  public async sendMail({
+    to,
+    from,
+    subject,
+    templateData,
+  }: ISendMailDTOS): Promise<void> {
     const message = await this.client.sendMail({
-      from: 'Contato Solibaby <contato@solibaby.com.br>',
-      to,
-      subject: 'Recuperação de senha',
-      text: body,
+      from: {
+        name: from?.name || 'Contato Solibaby',
+        address: from?.email || 'contato@solibaby.com.br',
+      },
+      to: {
+        name: to.name,
+        address: to.email,
+      },
+      subject,
+      html: await this.mailTemplateProvider.parse(templateData),
     });
 
     console.log('Message sent: %s', message.messageId);
