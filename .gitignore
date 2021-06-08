@@ -2,8 +2,10 @@
 yarn-error.log
 .idea/
 .vscode/
+.env
 build/
 temp/
 tmp/*
 !tmp/.gitkeep
 /coverage
+ormconfig.json
