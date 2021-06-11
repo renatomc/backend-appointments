@@ -3,7 +3,7 @@ yarn-error.log
 .idea/
 .vscode/
 .env
-build/
+dist/
 temp/
 tmp/*
 !tmp/.gitkeep
